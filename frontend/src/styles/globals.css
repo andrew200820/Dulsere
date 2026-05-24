@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Importa los tokens del sistema de diseño */
+@import url('../../design/css-variables.css');
+
+@layer base {
+  body {
+    font-family: var(--font-ui);
+    background-color: var(--surface-app);
+    color: var(--color-neutral-800);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid #B91C1C;
+    outline-offset: 2px;
+  }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #F0EAE4; }
+  ::-webkit-scrollbar-thumb { background: #C8BDB5; border-radius: 9999px; }
+  ::-webkit-scrollbar-thumb:hover { background: #A89890; }
+}
+
+@layer utilities {
+  .animate-shimmer {
+    background: linear-gradient(90deg, #F0EAE4 25%, #FDF1E2 50%, #F0EAE4 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+}

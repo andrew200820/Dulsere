@@ -1,0 +1,247 @@
+/* ============================================================
+   Dulseré ERP — Design Tokens
+   Manual de Marca 2026
+   ============================================================ */
+
+:root {
+
+  /* ----------------------------------------------------------
+     COLORES DE MARCA
+     ---------------------------------------------------------- */
+
+  /* Primario — Vino Dulseré */
+  --color-primary-950: #3D0404;
+  --color-primary-900: #5C0606;
+  --color-primary-800: #890A0A; /* Color principal de marca */
+  --color-primary-700: #A01010;
+  --color-primary-600: #B91C1C;
+  --color-primary-100: #FEE2E2;
+  --color-primary-50:  #FFF5F5;
+
+  /* Brand directs */
+  --color-brand-crimson: #890A0A;
+  --color-brand-black:   #000000;
+  --color-brand-cream:   #FDF1E2;
+  --color-brand-peach:   #FFDCB1;
+
+  /* ----------------------------------------------------------
+     NEUTROS CÁLIDOS
+     ---------------------------------------------------------- */
+  --color-neutral-50:  #FAF7F4;
+  --color-neutral-100: #F0EAE4;
+  --color-neutral-200: #E0D6CE;
+  --color-neutral-300: #C8BDB5;
+  --color-neutral-400: #A89890;
+  --color-neutral-500: #887870;
+  --color-neutral-600: #685850;
+  --color-neutral-700: #4A3830;
+  --color-neutral-800: #2E201A;
+  --color-neutral-900: #181008;
+
+  /* ----------------------------------------------------------
+     SEMÁNTICOS — SUCCESS
+     ---------------------------------------------------------- */
+  --color-success-700: #1D5C3A;
+  --color-success-600: #2D7A4F;
+  --color-success-500: #3A9E65;
+  --color-success-100: #D4EDDA;
+  --color-success-50:  #EDFAF3;
+
+  /* ----------------------------------------------------------
+     SEMÁNTICOS — WARNING
+     ---------------------------------------------------------- */
+  --color-warning-700: #92400E;
+  --color-warning-600: #B5621A;
+  --color-warning-500: #D97706;
+  --color-warning-100: #FDE8D0;
+  --color-warning-50:  #FFF8EE;
+
+  /* ----------------------------------------------------------
+     SEMÁNTICOS — ERROR
+     ---------------------------------------------------------- */
+  --color-error-700: #991B1B;
+  --color-error-600: #DC2626;
+  --color-error-500: #EF4444;
+  --color-error-100: #FDDEDE;
+  --color-error-50:  #FFF5F5;
+
+  /* ----------------------------------------------------------
+     SEMÁNTICOS — INFO
+     ---------------------------------------------------------- */
+  --color-info-700: #1E3A5F;
+  --color-info-600: #1A5C8A;
+  --color-info-500: #2580C4;
+  --color-info-100: #D0E8F5;
+  --color-info-50:  #EEF6FC;
+
+  /* ----------------------------------------------------------
+     ESTADOS DE PROFORMAS
+     ---------------------------------------------------------- */
+  --status-pendiente-bg:   #FDE8D0;
+  --status-pendiente-text: #B5621A;
+  --status-definitiva-bg:  #D0E8F5;
+  --status-definitiva-text:#1A5C8A;
+  --status-cerrada-bg:     #D4EDDA;
+  --status-cerrada-text:   #1D5C3A;
+
+  /* ----------------------------------------------------------
+     SUPERFICIES
+     ---------------------------------------------------------- */
+  --surface-app:       #FDF1E2; /* Fondo general de la app */
+  --surface-white:     #FFFFFF; /* Cards, modales, panels */
+  --surface-alt:       #FAF7F4; /* Filas alternas de tabla */
+  --surface-hover:     #FFF5F5; /* Hover sobre items */
+  --surface-selected:  #FEE2E2; /* Item seleccionado */
+
+  /* ----------------------------------------------------------
+     BORDES
+     ---------------------------------------------------------- */
+  --border-subtle:  #F0EAE4; /* Separadores internos, bordes de card */
+  --border-default: #E0D6CE; /* Bordes de inputs, tablas */
+  --border-strong:  #C8BDB5; /* Bordes con más énfasis */
+  --border-focus:   #890A0A; /* Outline de foco en inputs */
+
+  /* ----------------------------------------------------------
+     TIPOGRAFÍA
+     ---------------------------------------------------------- */
+  --font-display: 'Hello Paris', serif;   /* Solo branding y login */
+  --font-ui:      'Codec Pro', system-ui, sans-serif; /* Todo el ERP */
+
+  --text-xs:   0.6875rem;  /* 11px */
+  --text-sm:   0.8125rem;  /* 13px */
+  --text-base: 0.9375rem;  /* 15px */
+  --text-md:   1rem;       /* 16px */
+  --text-lg:   1.125rem;   /* 18px */
+  --text-xl:   1.375rem;   /* 22px */
+  --text-2xl:  1.75rem;    /* 28px */
+  --text-3xl:  2.25rem;    /* 36px */
+
+  --leading-tight:  1.2;
+  --leading-snug:   1.3;
+  --leading-normal: 1.5;
+
+  --font-weight-normal:   400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:     700;
+
+  /* ----------------------------------------------------------
+     ESPACIADO (base 4px)
+     ---------------------------------------------------------- */
+  --space-1:  0.25rem;  /* 4px */
+  --space-2:  0.5rem;   /* 8px */
+  --space-3:  0.75rem;  /* 12px */
+  --space-4:  1rem;     /* 16px */
+  --space-5:  1.25rem;  /* 20px */
+  --space-6:  1.5rem;   /* 24px */
+  --space-8:  2rem;     /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+
+  /* ----------------------------------------------------------
+     RADIOS DE BORDE
+     ---------------------------------------------------------- */
+  --radius-none: 0px;
+  --radius-sm:   4px;
+  --radius-md:   6px;
+  --radius-lg:   10px;
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+
+  /* ----------------------------------------------------------
+     SOMBRAS
+     ---------------------------------------------------------- */
+  --shadow-xs: 0 1px 2px rgba(137, 10, 10, 0.06);
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.10);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 16px 40px rgba(0, 0, 0, 0.15);
+
+  /* ----------------------------------------------------------
+     Z-INDEX
+     ---------------------------------------------------------- */
+  --z-base:            0;
+  --z-raised:          10;
+  --z-dropdown:        100;
+  --z-sticky:          200;
+  --z-modal-backdrop:  400;
+  --z-modal:           500;
+  --z-toast:           600;
+  --z-tooltip:         700;
+
+  /* ----------------------------------------------------------
+     LAYOUT
+     ---------------------------------------------------------- */
+  --navbar-height:    56px;
+  --sidebar-width:    240px;
+  --sidebar-collapsed: 64px;
+  --content-max-width: 1280px;
+  --content-padding:   var(--space-10);
+
+  /* ----------------------------------------------------------
+     TRANSICIONES
+     ---------------------------------------------------------- */
+  --transition-fast:   100ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow:   300ms ease;
+
+}
+
+/* ----------------------------------------------------------
+   UTILIDADES BASE
+   ---------------------------------------------------------- */
+
+body {
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-neutral-800);
+  background-color: var(--surface-app);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Focus visible global */
+:focus-visible {
+  outline: 2px solid var(--color-primary-600);
+  outline-offset: 2px;
+}
+
+/* Scrollbar personalizado (opcional, Chrome/Edge) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-neutral-100);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-300);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-400);
+}
+
+/* ----------------------------------------------------------
+   ANIMACIONES
+   ---------------------------------------------------------- */
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
