@@ -1,0 +1,171 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Role {
+  id          Int       @id @default(autoincrement())
+  nombre      String    @unique
+  descripcion String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  usuarios    Usuario[]
+
+  @@map("roles")
+}
+
+model Usuario {
+  id                   String                 @id @default(uuid()) @db.Uuid
+  email                String                 @unique
+  passwordHash         String                 @map("password_hash")
+  nombre               String?
+  roleId               Int                    @map("role_id")
+  createdAt            DateTime               @default(now()) @map("created_at")
+  updatedAt            DateTime               @default(now()) @updatedAt @map("updated_at")
+  role                 Role                   @relation(fields: [roleId], references: [id])
+  movimientosInventario MovimientoInventario[]
+  pagosAnticipos       PagoAnticipo[]
+
+  @@map("usuarios")
+}
+
+model Insumo {
+  id                   Int                    @id @default(autoincrement())
+  nombre               String
+  unidadMedida         String                 @map("unidad_medida")
+  stockActual          Decimal                @default(0.0000) @map("stock_actual") @db.Decimal(12, 4)
+  stockMinimo          Decimal                @default(0.0000) @map("stock_minimo") @db.Decimal(12, 4)
+  costoUnitario        Decimal                @default(0.00) @map("costo_unitario") @db.Decimal(12, 2)
+  activo               Boolean                @default(true)
+  createdAt            DateTime               @default(now()) @map("created_at")
+  updatedAt            DateTime               @default(now()) @updatedAt @map("updated_at")
+  recetas              RecetaBom[]
+  movimientosInventario MovimientoInventario[]
+
+  @@map("insumos")
+}
+
+model Producto {
+  id              Int               @id @default(autoincrement())
+  nombre          String
+  descripcion     String?
+  precioVenta     Decimal           @map("precio_venta") @db.Decimal(12, 2)
+  activo          Boolean           @default(true)
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @default(now()) @updatedAt @map("updated_at")
+  recetas         RecetaBom[]
+  detalleProformas DetalleProforma[]
+
+  @@map("productos")
+}
+
+model RecetaBom {
+  id                Int      @id @default(autoincrement())
+  productoId        Int      @map("producto_id")
+  insumoId          Int      @map("insumo_id")
+  cantidadRequerida Decimal  @map("cantidad_requerida") @db.Decimal(12, 4)
+  createdAt         DateTime @default(now()) @map("created_at")
+  producto          Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  insumo            Insumo   @relation(fields: [insumoId], references: [id], onDelete: Restrict)
+
+  @@unique([productoId, insumoId])
+  @@map("recetas_bom")
+}
+
+model MovimientoInventario {
+  id             Int      @id @default(autoincrement())
+  insumoId       Int      @map("insumo_id")
+  tipoMovimiento String   @map("tipo_movimiento")
+  cantidad       Decimal  @db.Decimal(12, 4)
+  motivo         String
+  usuarioId      String?  @map("usuario_id") @db.Uuid
+  createdAt      DateTime @default(now()) @map("created_at")
+  insumo         Insumo   @relation(fields: [insumoId], references: [id], onDelete: Restrict)
+  usuario        Usuario? @relation(fields: [usuarioId], references: [id])
+
+  @@map("movimientos_inventario")
+}
+
+model Cliente {
+  id               Int        @id @default(autoincrement())
+  cedulaRuc        String     @unique @map("cedula_ruc")
+  nombre           String
+  telefono         String
+  email            String?
+  direccionEntrega String?    @map("direccion_entrega")
+  createdAt        DateTime   @default(now()) @map("created_at")
+  updatedAt        DateTime   @default(now()) @updatedAt @map("updated_at")
+  proformas        Proforma[]
+
+  @@map("clientes")
+}
+
+model Proforma {
+  id                   Int               @id @default(autoincrement())
+  clienteId            Int               @map("cliente_id")
+  estado               String            @default("Pendiente")
+  fechaEmision         DateTime          @default(now()) @map("fecha_emision")
+  fechaEntrega         DateTime          @map("fecha_entrega")
+  subtotal             Decimal           @default(0.00) @db.Decimal(12, 2)
+  descuento            Decimal           @default(0.00) @db.Decimal(12, 2)
+  motivoDescuento      String?           @map("motivo_descuento")
+  porcentajeIva        Decimal           @default(0.00) @map("porcentaje_iva") @db.Decimal(5, 2)
+  montoIva             Decimal           @default(0.00) @map("monto_iva") @db.Decimal(12, 2)
+  total                Decimal           @default(0.00) @db.Decimal(12, 2)
+  urlPrevisualizacionIa String?          @map("url_previsualizacion_ia")
+  tokenAcceso          String?           @unique @default(dbgenerated("uuid_generate_v4()")) @map("token_acceso") @db.Uuid
+  createdAt            DateTime          @default(now()) @map("created_at")
+  updatedAt            DateTime          @default(now()) @updatedAt @map("updated_at")
+  cliente              Cliente           @relation(fields: [clienteId], references: [id], onDelete: Restrict)
+  detalles             DetalleProforma[]
+  pagos                PagoAnticipo[]
+  eventoCalendario     EventoCalendario?
+
+  @@map("proformas")
+}
+
+model DetalleProforma {
+  id             Int      @id @default(autoincrement())
+  proformaId     Int      @map("proforma_id")
+  productoId     Int      @map("producto_id")
+  cantidad       Int
+  precioUnitario Decimal  @map("precio_unitario") @db.Decimal(12, 2)
+  subtotal       Decimal  @db.Decimal(12, 2)
+  proforma       Proforma @relation(fields: [proformaId], references: [id], onDelete: Cascade)
+  producto       Producto @relation(fields: [productoId], references: [id], onDelete: Restrict)
+
+  @@map("detalle_proformas")
+}
+
+model PagoAnticipo {
+  id             Int      @id @default(autoincrement())
+  proformaId     Int      @map("proforma_id")
+  monto          Decimal  @db.Decimal(12, 2)
+  tipoPago       String   @map("tipo_pago")
+  metodoPago     String   @map("metodo_pago")
+  referencia     String?
+  fechaPago      DateTime @default(now()) @map("fecha_pago")
+  usuarioId      String?  @map("usuario_id") @db.Uuid
+  proforma       Proforma @relation(fields: [proformaId], references: [id], onDelete: Cascade)
+  usuario        Usuario? @relation(fields: [usuarioId], references: [id])
+
+  @@map("pagos_anticipos")
+}
+
+model EventoCalendario {
+  id                     Int      @id @default(autoincrement())
+  proformaId             Int      @unique @map("proforma_id")
+  googleCalendarEventId  String?  @map("google_calendar_event_id")
+  titulo                 String
+  descripcion            String?
+  fechaInicio            DateTime @map("fecha_inicio")
+  fechaFin               DateTime @map("fecha_fin")
+  sincronizado           Boolean  @default(false)
+  updatedAt              DateTime @default(now()) @updatedAt @map("updated_at")
+  proforma               Proforma @relation(fields: [proformaId], references: [id], onDelete: Cascade)
+
+  @@map("eventos_calendario")
+}
