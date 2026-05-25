@@ -5,18 +5,17 @@ import { AuthModule } from './auth/auth.module';
 import { PublicModule } from './public/public.module';
 import { InventarioModule } from './inventario/inventario.module';
 import { ProformasModule } from './proformas/proformas.module';
+import { UsuariosModule } from './usuarios/usuarios.module';
 
 @Module({
   imports: [
-    // Configuración global de entorno
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
     AuthModule,
     PublicModule,
     InventarioModule,
     ProformasModule,
+    UsuariosModule,
   ],
 })
 export class AppModule {}

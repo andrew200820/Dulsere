@@ -1,5 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import * as PDFDocument from 'pdfkit';
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const PDFDocument = require('pdfkit');
 
 @Injectable()
 export class PdfService {
@@ -9,14 +11,14 @@ export class PdfService {
         const doc = new PDFDocument({ margin: 50 });
         const buffers: Buffer[] = [];
 
-        doc.on('data', (chunk) => buffers.push(chunk));
+        doc.on('data', (chunk: Buffer) => buffers.push(chunk));
         doc.on('end', () => resolve(Buffer.concat(buffers)));
-        doc.on('error', (err) => reject(err));
+        doc.on('error', (err: Error) => reject(err));
 
         // --- ENCABEZADO ---
         doc.fontSize(24).fillColor('#c0392b').text('DULSERE', { align: 'left' });
         doc.fontSize(10).fillColor('#7f8c8d').text('Repostería Fina & Catering Gourmet', { align: 'left' });
-        
+
         doc.moveUp(2);
         doc.fontSize(14).fillColor('#2c3e50').text(`PROFORMA #000${proforma.id}`, { align: 'right' });
         doc.fontSize(10).fillColor('#7f8c8d').text(`Estado: ${proforma.estado}`, { align: 'right' });
@@ -46,12 +48,14 @@ export class PdfService {
         // --- TABLA DE DETALLES ---
         const tableTop = 230;
         doc.fontSize(10).fillColor('#2c3e50');
-        
-        // Cabecera de la tabla
-        doc.text('Producto', 50, tableTop, { bold: true });
+
+        // Cabecera bold
+        doc.font('Helvetica-Bold');
+        doc.text('Producto', 50, tableTop);
         doc.text('Cant.', 280, tableTop, { align: 'right' });
         doc.text('Precio Unit.', 380, tableTop, { align: 'right' });
         doc.text('Subtotal', 480, tableTop, { align: 'right' });
+        doc.font('Helvetica');
 
         doc.strokeColor('#2c3e50').lineWidth(1).moveTo(50, tableTop + 15).lineTo(562, tableTop + 15).stroke();
 
@@ -62,7 +66,6 @@ export class PdfService {
           doc.text(det.cantidad.toString(), 280, currentY, { align: 'right' });
           doc.text(`$${Number(det.precioUnitario).toFixed(2)}`, 380, currentY, { align: 'right' });
           doc.text(`$${Number(det.subtotal).toFixed(2)}`, 480, currentY, { align: 'right' });
-          
           currentY += 20;
         });
 
@@ -72,7 +75,7 @@ export class PdfService {
         // --- DESGLOSE DE TOTALES ---
         const totalX = 350;
         doc.fontSize(10).fillColor('#2c3e50');
-        
+
         doc.text('Subtotal:', totalX, currentY);
         doc.text(`$${Number(proforma.subtotal).toFixed(2)}`, 480, currentY, { align: 'right' });
         currentY += 15;
@@ -87,22 +90,23 @@ export class PdfService {
         doc.text(`$${Number(proforma.montoIva).toFixed(2)}`, 480, currentY, { align: 'right' });
         currentY += 20;
 
-        doc.fontSize(12).fillColor('#c0392b');
-        doc.text('TOTAL:', totalX, currentY, { bold: true });
-        doc.text(`$${Number(proforma.total).toFixed(2)}`, 480, currentY, { align: 'right', bold: true });
+        doc.font('Helvetica-Bold').fontSize(12).fillColor('#c0392b');
+        doc.text('TOTAL:', totalX, currentY);
+        doc.text(`$${Number(proforma.total).toFixed(2)}`, 480, currentY, { align: 'right' });
+        doc.font('Helvetica');
 
         // --- PIE DE PÁGINA ---
         doc.fontSize(8).fillColor('#95a5a6').text(
           'Este documento es una proforma preliminar de cotización de servicios de repostería. ' +
           'Para confirmación de pedido se requiere el anticipo del 50% mínimo.',
-          50,
-          700,
-          { align: 'center', width: 462 }
+          50, 700,
+          { align: 'center', width: 462 },
         );
 
         doc.end();
       } catch (error) {
-        reject(new InternalServerErrorException(`Fallo al generar PDF: ${error.message}`));
+        const msg = error instanceof Error ? error.message : String(error);
+        reject(new InternalServerErrorException(`Fallo al generar PDF: ${msg}`));
       }
     });
   }

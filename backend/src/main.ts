@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { SnakeCaseInterceptor } from './common/interceptors/snake-case.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,6 +17,9 @@ async function bootstrap() {
     forbidNonWhitelisted: true,
   }));
   
+  // Serialización snake_case en todas las respuestas
+  app.useGlobalInterceptors(new SnakeCaseInterceptor());
+
   // Prefijo global de API
   app.setGlobalPrefix('api');
 

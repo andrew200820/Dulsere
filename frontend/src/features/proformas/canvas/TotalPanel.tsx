@@ -13,8 +13,9 @@ export function TotalPanel() {
     aiPreviewUrl, aiLoading, setAiPreview, setAiLoading,
     reset,
   } = useCanvasStore()
+  const [imgError, setImgError] = useState(false)
 
-  const [clienteSearch, setClienteSearch] = useState('')
+  const [clienteSearch, setClienteSearch]   = useState('')
   const [showClienteList, setShowClienteList] = useState(false)
 
   const { data: clientes = [] } = useQuery({
@@ -30,14 +31,14 @@ export function TotalPanel() {
   const crearMutation = useMutation({
     mutationFn: () =>
       proformasApi.create({
-        cliente_id: clienteSeleccionado!.id,
-        fecha_entrega: fechaEntrega,
-        notas,
-        items: items.map((i) => ({
-          producto_id: i.productoId,
+        clienteId: clienteSeleccionado!.id,
+        fechaEntrega: fechaEntrega!,
+        descuento: totales.descuentoTotal,
+        motivoDescuento: notas || undefined,
+        porcentajeIva: 12,
+        detalles: items.map((i) => ({
+          productoId: i.productoId,
           cantidad: i.cantidad,
-          precio_unitario: i.precioUnitario,
-          descuento: i.descuento,
         })),
       }),
     onSuccess: (res) => {
@@ -49,13 +50,15 @@ export function TotalPanel() {
   async function handleAiPreview() {
     if (items.length === 0) return
     setAiLoading(true)
+    setImgError(false)
+    setAiPreview(null)
     try {
       const res = await proformasApi.aiPreview(
         items.map((i) => ({ nombre: i.nombre, cantidad: i.cantidad }))
       )
       setAiPreview(res.data.imagen_url)
     } catch {
-      // toast error manejado globalmente
+      setImgError(true)
     } finally {
       setAiLoading(false)
     }
@@ -170,9 +173,15 @@ export function TotalPanel() {
             <>✨ Ver preview IA</>
           )}
         </button>
+        {imgError && (
+          <div className="mt-3 rounded-lg border border-neutral-200 py-6 text-center text-xs text-neutral-400">
+            No se pudo generar la imagen.{' '}
+            <button className="underline" onClick={handleAiPreview}>Reintentar</button>
+          </div>
+        )}
         {aiPreviewUrl && (
           <div className="mt-3 overflow-hidden rounded-lg border border-neutral-200">
-            <img src={aiPreviewUrl} alt="Preview IA de la tabla" className="w-full" />
+            <img src={aiPreviewUrl} alt="Preview IA" className="w-full" />
           </div>
         )}
       </div>

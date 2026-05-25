@@ -24,7 +24,7 @@ export function AdminDashboard() {
       const mes = new Date(p.fecha_emision).getMonth()
       return p.estado === 'Cerrada' && mes === new Date().getMonth()
     })
-    .reduce((acc: number, p: Proforma) => acc + p.total, 0)
+    .reduce((acc: number, p: Proforma) => acc + Number(p.total), 0)
   const entregas     = proformas.filter((p: Proforma) => p.estado === 'Definitiva').length
   const stockBajo    = insumos.filter((i: Insumo) => i.stock_actual <= i.stock_minimo).length
 
@@ -53,20 +53,10 @@ export function AdminDashboard() {
         <div className="flex justify-center py-12"><Spinner size="lg" /></div>
       ) : (
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <MetricCard label="Proformas activas" value={activas} icon="◻" />
-          <MetricCard
-            label="Ingresos del mes"
-            value={`$${ingresosMes.toFixed(2)}`}
-            icon="$"
-            highlight
-          />
-          <MetricCard label="Pendientes de entrega" value={entregas} icon="◷" />
-          <MetricCard
-            label="Insumos bajo mínimo"
-            value={stockBajo}
-            icon="⚠"
-            alert={stockBajo > 0}
-          />
+          <MetricCard label="Proformas activas"   value={activas}                   icon="◻" to="/proformas" />
+          <MetricCard label="Ingresos del mes"    value={`$${ingresosMes.toFixed(2)}`} icon="$" highlight to="/proformas" />
+          <MetricCard label="Pendientes de entrega" value={entregas}                icon="◷" to="/proformas" />
+          <MetricCard label="Insumos bajo mínimo" value={stockBajo}                 icon="⚠" alert={stockBajo > 0} to="/inventario/insumos" />
         </div>
       )}
 
@@ -101,9 +91,9 @@ export function AdminDashboard() {
                   key={p.id}
                   className={`border-b border-neutral-100 hover:bg-primary-50 transition-colors ${i % 2 === 1 ? 'bg-neutral-50' : 'bg-white'}`}
                 >
-                  <td className="px-6 py-3 font-medium text-neutral-800">{p.numero}</td>
+                  <td className="px-6 py-3 font-medium text-neutral-800">#{p.id}</td>
                   <td className="px-6 py-3 text-neutral-700">{p.cliente.nombre}</td>
-                  <td className="px-6 py-3 font-semibold text-primary-800">${p.total.toFixed(2)}</td>
+                  <td className="px-6 py-3 font-semibold text-primary-800">${Number(p.total).toFixed(2)}</td>
                   <td className="px-6 py-3"><EstadoBadge estado={p.estado} /></td>
                   <td className="px-6 py-3 text-neutral-500">
                     {new Date(p.fecha_emision).toLocaleDateString('es-EC')}
@@ -129,11 +119,12 @@ interface MetricCardProps {
   icon: string
   highlight?: boolean
   alert?: boolean
+  to?: string
 }
 
-function MetricCard({ label, value, icon, highlight, alert }: MetricCardProps) {
-  return (
-    <div className={`rounded-xl border bg-white p-5 shadow-sm ${alert ? 'border-warning-400' : 'border-neutral-200'}`}>
+function MetricCard({ label, value, icon, highlight, alert, to }: MetricCardProps) {
+  const inner = (
+    <div className={`rounded-xl border bg-white p-5 shadow-sm transition-shadow ${alert ? 'border-warning-400' : 'border-neutral-200'} ${to ? 'hover:shadow-md cursor-pointer' : ''}`}>
       <div className="flex items-start justify-between">
         <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">{label}</p>
         <span className={`text-lg ${alert ? 'text-warning-600' : 'text-neutral-300'}`}>{icon}</span>
@@ -146,4 +137,6 @@ function MetricCard({ label, value, icon, highlight, alert }: MetricCardProps) {
       )}
     </div>
   )
+
+  return to ? <Link to={to}>{inner}</Link> : inner
 }

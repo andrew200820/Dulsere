@@ -21,3 +21,12 @@ export interface LoginResponse {
   access_token: string
   usuario: Usuario
 }
+
+export interface UsuarioAdmin {
+  id: string
+  email: string
+  nombre: string | null
+  role_id: number
+  created_at: string
+  role: { id: number; nombre: string }
+}

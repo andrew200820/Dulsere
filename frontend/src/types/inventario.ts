@@ -1,21 +1,21 @@
 export interface Insumo {
   id: number
   nombre: string
-  unidad: 'g' | 'ml' | 'ud'
+  unidad_medida: string
   stock_actual: number
   stock_minimo: number
-  precio_unitario: number
+  costo_unitario: number
   activo: boolean
 }
 
 export interface MovimientoInventario {
   id: number
-  tipo: 'Entrada' | 'Salida' | 'Ajuste'
-  insumo: { id: number; nombre: string; unidad: string }
+  tipo_movimiento: 'Entrada' | 'Salida' | 'Ajuste'
+  insumo: { id: number; nombre: string; unidad_medida: string }
   cantidad: number
-  fecha: string
+  created_at: string
   motivo: string | null
-  usuario: { nombre: string }
+  usuario: { nombre: string } | null
 }
 
 export interface RecetaBOM {

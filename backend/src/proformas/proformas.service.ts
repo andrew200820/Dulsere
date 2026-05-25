@@ -191,6 +191,35 @@ export class ProformasService {
     });
   }
 
+  async cambiarEstado(id: number, estado: string) {
+    const proforma = await this.prisma.proforma.findUnique({ where: { id } });
+    if (!proforma) throw new Error(`Proforma ${id} no encontrada`);
+    return this.prisma.proforma.update({ where: { id }, data: { estado } });
+  }
+
+  async generarPreview(items: { nombre: string; cantidad: number }[]) {
+    const descripcion = items.map((i) => `${i.cantidad} ${i.nombre}`).join(', ');
+    const prompt = `gourmet dessert catering table featuring ${descripcion}, professional food photography, warm golden lighting, elegant presentation`;
+    const encoded = encodeURIComponent(prompt);
+    const url = `https://image.pollinations.ai/prompt/${encoded}?width=800&height=500&nologo=true`;
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 50000);
+
+    try {
+      const response = await fetch(url, { signal: controller.signal });
+      if (!response.ok) {
+        throw new BadRequestException('Pollinations no respondió correctamente.');
+      }
+      const buffer = await response.arrayBuffer();
+      const base64 = Buffer.from(buffer).toString('base64');
+      const mime = response.headers.get('content-type') ?? 'image/jpeg';
+      return { imagen_url: `data:${mime};base64,${base64}` };
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
   private async ejecutarTransicionADefinitiva(proforma: any, tx: any, usuarioId?: string) {
     // 1. Cambiar estado de la proforma
     await tx.proforma.update({

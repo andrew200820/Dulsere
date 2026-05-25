@@ -1,12 +1,12 @@
 export type EstadoProforma = 'Pendiente' | 'Definitiva' | 'Cerrada'
 export type MetodoPago = 'Transferencia' | 'Efectivo' | 'Tarjeta'
+export type TipoPago = 'Anticipo' | 'Saldo_Cierre' | 'Completo'
 
 export interface Producto {
   id: number
   nombre: string
   descripcion: string | null
   precio_venta: number
-  unidad: string
   activo: boolean
 }
 
@@ -40,17 +40,16 @@ export interface CanvasTotales {
 
 export interface DetalleProforma {
   id: number
-  producto_id: number
   producto: Producto
   cantidad: number
   precio_unitario: number
-  descuento: number
   subtotal: number
 }
 
 export interface PagoAnticipo {
   id: number
   monto: number
+  tipo_pago: TipoPago
   metodo_pago: MetodoPago
   referencia: string | null
   fecha_pago: string
@@ -58,29 +57,27 @@ export interface PagoAnticipo {
 
 export interface Proforma {
   id: number
-  numero: string
   estado: EstadoProforma
-  token_acceso: string
+  token_acceso: string | null
   cliente: Cliente
   fecha_emision: string
   fecha_entrega: string | null
   subtotal: number
   descuento: number
-  iva: number
+  monto_iva: number
   total: number
-  notas: string | null
   detalles: DetalleProforma[]
   pagos: PagoAnticipo[]
 }
 
 export interface CreateProformaDto {
-  cliente_id: number
-  fecha_entrega: string | null
-  notas: string | null
-  items: {
-    producto_id: number
+  clienteId: number
+  fechaEntrega: string
+  descuento?: number
+  motivoDescuento?: string
+  porcentajeIva?: number
+  detalles: {
+    productoId: number
     cantidad: number
-    precio_unitario: number
-    descuento: number
   }[]
 }

@@ -10,15 +10,14 @@ const AdminDashboard    = lazy(() => import('@/features/dashboard/AdminDashboard
 const InventarioDash    = lazy(() => import('@/features/dashboard/InventarioDashboard').then((m) => ({ default: m.InventarioDashboard })))
 const ProduccionDash    = lazy(() => import('@/features/dashboard/ProduccionDashboard').then((m) => ({ default: m.ProduccionDashboard })))
 const NuevaProforma     = lazy(() => import('@/features/proformas/NuevaProformaPage').then((m) => ({ default: m.NuevaProformaPage })))
+const ProformasList     = lazy(() => import('@/features/proformas/ProformasListPage').then((m) => ({ default: m.ProformasListPage })))
+const ProformaDetail    = lazy(() => import('@/features/proformas/ProformaDetailPage').then((m) => ({ default: m.ProformaDetailPage })))
+const InsumosPage       = lazy(() => import('@/features/inventario/insumos/InsumosPage').then((m) => ({ default: m.InsumosPage })))
+const ProductosPage     = lazy(() => import('@/features/inventario/productos/ProductosPage').then((m) => ({ default: m.ProductosPage })))
+const MovimientosPage   = lazy(() => import('@/features/inventario/movimientos/MovimientosPage').then((m) => ({ default: m.MovimientosPage })))
+const ClientesPage      = lazy(() => import('@/features/clientes/ClientesPage').then((m) => ({ default: m.ClientesPage })))
+const UsuariosPage      = lazy(() => import('@/features/admin/UsuariosPage').then((m) => ({ default: m.UsuariosPage })))
 
-// Páginas placeholder (se completan en siguientes fases)
-const Placeholder = ({ title }: { title: string }) => (
-  <div className="flex flex-col items-center justify-center py-24 text-neutral-400">
-    <span className="text-5xl mb-4">🚧</span>
-    <p className="text-lg font-semibold">{title}</p>
-    <p className="text-sm mt-1">En construcción</p>
-  </div>
-)
 
 function Loading() {
   return (
@@ -91,18 +90,18 @@ export const router = createBrowserRouter([
       },
 
       // Proformas
-      { path: 'proformas',       element: <Placeholder title="Lista de proformas" /> },
+      { path: 'proformas',       element: withSuspense(ProformasList) },
       { path: 'proformas/nueva', element: withSuspense(NuevaProforma) },
-      { path: 'proformas/:id',   element: <Placeholder title="Detalle de proforma" /> },
+      { path: 'proformas/:id',   element: withSuspense(ProformaDetail) },
 
       // Inventario
-      { path: 'inventario/insumos',     element: <Placeholder title="Gestión de insumos" /> },
-      { path: 'inventario/productos',   element: <Placeholder title="Gestión de productos" /> },
-      { path: 'inventario/movimientos', element: <Placeholder title="Movimientos de inventario" /> },
+      { path: 'inventario/insumos',     element: withSuspense(InsumosPage) },
+      { path: 'inventario/productos',   element: withSuspense(ProductosPage) },
+      { path: 'inventario/movimientos', element: withSuspense(MovimientosPage) },
 
       // Otros
-      { path: 'clientes',          element: <Placeholder title="Clientes" /> },
-      { path: 'admin/usuarios',    element: <Placeholder title="Usuarios" /> },
+      { path: 'clientes',          element: withSuspense(ClientesPage) },
+      { path: 'admin/usuarios',    loader: requireRole('Admin'), element: withSuspense(UsuariosPage) },
     ],
   },
 ])

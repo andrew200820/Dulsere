@@ -7,7 +7,7 @@ export class PublicController {
 
   @Get(':token')
   async obtenerProformaPublica(
-    @Param('token', new ParseUUIDPipe({ version: '4', message: 'El token de acceso debe ser un UUID v4 válido' })) 
+    @Param('token', new ParseUUIDPipe({ version: '4' }))
     token: string
   ) {
     return this.publicService.obtenerProformaPublica(token);
